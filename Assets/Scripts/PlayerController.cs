@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
-        m_InputActions = new InputSystem_Actions();
+        m_InputActions = new InputSystem_Actions(); // initializing
         m_Player = m_InputActions.Player;
     }
 
