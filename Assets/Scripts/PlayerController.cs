@@ -21,9 +21,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        Vector2 playerMovement = m_Player.Move.ReadValue<Vector2>(); // read the move value
-        Vector3 movement = new Vector3(playerMovement.x, playerMovement.y, 0); // parse it
-        transform.position += movement * moveSpeed * Time.deltaTime; // change the position
+        HandleMovement();
     }
 
     void OnEnable()
@@ -43,5 +41,18 @@ public class PlayerController : MonoBehaviour
         m_Player.Disable(); // Disable all actions within map.
         m_Player.Move.performed -= OnMove;
         m_Player.Move.canceled -= OnMove;
+    }
+
+    void HandleMovement()
+    {
+        Vector2 input = m_Player.Move.ReadValue<Vector2>().normalized; // read the input move value (between 1 and -1 cus its normalised)
+        Vector3 movement = new Vector3(input.x, input.y, 0); // direction of the movement
+        transform.position += movement * moveSpeed * Time.deltaTime; // apply movement direction in position
+
+        // clamping the position
+        float clampedX = Mathf.Clamp(transform.position.x, -8.5f, 8.5f);
+        float clampedY = Mathf.Clamp(transform.position.y, -4, 4);
+        // apply clamped position of x and y
+        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
     }
 }
