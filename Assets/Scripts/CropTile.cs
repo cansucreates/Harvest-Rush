@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class CropTile : MonoBehaviour
 {
@@ -38,10 +37,7 @@ public class CropTile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Keyboard.current.eKey.wasPressedThisFrame)
-        {
-            Interact();
-        }
+
     }
 
     public void Interact()
