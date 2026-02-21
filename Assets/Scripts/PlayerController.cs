@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
         m_Player.Enable(); // Enable all actions within map.
         m_Player.Move.performed += OnMove;
         m_Player.Move.canceled += OnMove;
+
+        m_Player.Interact.performed += OnInteraction;
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -33,11 +35,40 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"OnMove: {context.ReadValue<Vector2>()}");
     }
 
+    public void OnInteraction(InputAction.CallbackContext context) // when player presses E on a tile
+    {
+        Debug.Log($"Interaction fired: {context.phase}");
+        if (context.performed) // if player presses e
+            Debug.Log("Performed triggered");
+        {
+            Collider2D tileCollider = Physics2D.OverlapPoint(transform.position); // the tiles collider position collide with player
+            if (tileCollider != null) // check if tile there and has a croptile component
+            {
+                CropTile tile = tileCollider.GetComponent<CropTile>(); //take the tile
+                if (tile != null)
+                {
+                    tile.Interact(); // call the interact function from CropTile script
+                }
+            }
+            else
+            {
+                Debug.Log("No tilecollider or croptile component found");
+            }
+        }
+
+        if (context.canceled)
+        {
+            Debug.Log("Button released.");
+        }
+    }
+
     void OnDisable()
     {
         m_Player.Disable(); // Disable all actions within map.
         m_Player.Move.performed -= OnMove;
         m_Player.Move.canceled -= OnMove;
+
+        m_Player.Interact.performed -= OnInteraction;
     }
 
     void HandleMovement()
